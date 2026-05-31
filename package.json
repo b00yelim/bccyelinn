@@ -1,0 +1,17 @@
+{
+  "name": "clap-trap",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A playful microphone clap mosquito-catching game.",
+  "scripts": {
+    "dev": "python3 -m http.server 4173 --bind 127.0.0.1",
+    "build": "node scripts/build.js",
+    "preview": "python3 -m http.server 4174 --bind 127.0.0.1 --directory dist"
+  },
+  "keywords": [
+    "game",
+    "web-audio",
+    "static-site"
+  ],
+  "license": "UNLICENSED"
+}
