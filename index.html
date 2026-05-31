@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="DATUM is an architectural fragrance brand: scent as layers of space."
+    />
+    <title>DATUM | Scent as Layers of Space</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="Primary navigation">
+      <a class="brand-mark" href="#top" aria-label="DATUM home">
+        <img src="assets/logo-symbol.jpg" alt="" />
+        <span>DATUM</span>
+      </a>
+      <nav class="site-nav">
+        <a href="#brand">Brand</a>
+        <a href="#scents">Scents</a>
+        <a href="#builder">Layer Builder</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="cart-button" type="button" aria-live="polite">
+        Bag <span id="cartCount">0</span>
+      </button>
+    </header>
+
+    <main id="top">
+      <section class="hero section-reveal">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <img class="hero-wordmark" src="assets/datum-wordmark.png" alt="DATUM" />
+          <p class="eyebrow">SCENT AS LAYERS OF SPACE</p>
+          <h1>Architectural fragrance for spatial perception.</h1>
+          <p class="hero-text">
+            향을 통해 공간의 구조를 읽고, 레이어로 재구성하는 프래그런스 브랜드.
+            DATUM은 개인의 공간 감각을 향의 구조로 완성합니다.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#scents">Explore Scents</a>
+            <a class="button secondary" href="#builder">Build Your Layer</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="spatial-frame">
+            <div class="section-planes" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <!-- This uses the attached image as an editorial frame. If a clean product cut-out is produced later, replace this source and adjust object-fit to contain. -->
+            <img class="hero-bottle" src="assets/perfume-bottles.jpg" alt="DATUM rectangular ribbed perfume bottles" />
+          </div>
+        </div>
+        <div class="hero-caption">
+          <span>L05 / DEPTH</span>
+          <span>100ML</span>
+          <span>3.4 FL. OZ</span>
+        </div>
+      </section>
+
+      <section class="concept section-reveal" id="brand">
+        <div class="section-label">
+          <span>01</span>
+          <p>Brand Concept</p>
+        </div>
+        <div class="concept-copy">
+          <h2>향은 보이지 않는 공간의 단면입니다.</h2>
+          <p>
+            DATUM은 향을 단일한 감각으로 소비하지 않습니다. 공기, 빛, 구조, 그림자의
+            층위를 읽고 조합하여 사용자가 스스로 공간을 해석하는 방식을 제안합니다.
+          </p>
+        </div>
+        <div class="layer-diagram" aria-label="Scent layer structure">
+          <div class="diagram-plane plane-a">
+            <span>TOP</span>
+          </div>
+          <div class="diagram-plane plane-b">
+            <span>MIDDLE</span>
+          </div>
+          <div class="diagram-plane plane-c">
+            <span>BASE</span>
+          </div>
+          <div class="diagram-lines"></div>
+        </div>
+      </section>
+
+      <section class="visual-band section-reveal">
+        <div class="experience-editorial">
+          <figure class="experience-large">
+            <img src="assets/packaging.png" alt="DATUM packaging and perfume in a warm gray architectural setting" />
+          </figure>
+          <figure class="experience-small">
+            <img src="assets/layer-cards.jpg" alt="DATUM layered fragrance cards" />
+          </figure>
+        </div>
+        <div class="visual-note">
+          <span>Brand Experience</span>
+          <p>Spatial rhythm, frosted cards, blind emboss, structured shadow.</p>
+        </div>
+      </section>
+
+      <section class="products section-reveal" id="scents">
+        <div class="section-heading">
+          <div class="section-label">
+            <span>02</span>
+            <p>Scents</p>
+          </div>
+          <h2>Fragrances placed as objects in space.</h2>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <section class="builder section-reveal" id="builder">
+        <div class="section-label">
+          <span>03</span>
+          <p>Scent Layer Builder</p>
+        </div>
+        <div class="builder-panel">
+          <div class="builder-copy">
+            <h2>Build a spatial scent layer.</h2>
+            <p>
+              TOP, MIDDLE, BASE의 구조를 선택해 공간의 첫 인상, 중심 구조, 잔향의
+              깊이를 조합합니다.
+            </p>
+          </div>
+          <div class="layer-controls" aria-label="Scent layer options">
+            <div class="layer-group" data-layer="top">
+              <h3>TOP</h3>
+              <button type="button" data-value="Air 01">Air 01</button>
+              <button type="button" data-value="Light 02">Light 02</button>
+              <button type="button" data-value="Citrus Veil">Citrus Veil</button>
+            </div>
+            <div class="layer-group" data-layer="middle">
+              <h3>MIDDLE</h3>
+              <button type="button" data-value="Frame 06">Frame 06</button>
+              <button type="button" data-value="Grid 08">Grid 08</button>
+              <button type="button" data-value="Iris Plane">Iris Plane</button>
+            </div>
+            <div class="layer-group" data-layer="base">
+              <h3>BASE</h3>
+              <button type="button" data-value="Shadow 11">Shadow 11</button>
+              <button type="button" data-value="Depth 05">Depth 05</button>
+              <button type="button" data-value="Amber Stone">Amber Stone</button>
+            </div>
+          </div>
+          <aside class="layer-summary">
+            <p class="eyebrow">Your Spatial Scent Layer</p>
+            <dl>
+              <div><dt>TOP</dt><dd id="summaryTop">Air 01</dd></div>
+              <div><dt>MIDDLE</dt><dd id="summaryMiddle">Frame 06</dd></div>
+              <div><dt>BASE</dt><dd id="summaryBase">Shadow 11</dd></div>
+            </dl>
+            <div class="summary-lines" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="cap-section section-reveal">
+        <div class="cap-copy">
+          <div class="section-label">
+            <span>04</span>
+            <p>Custom Cap</p>
+          </div>
+          <h2>Choose the cap as a spatial accent.</h2>
+          <p>
+            병의 구조는 유지하고, 캡의 색상만 절제된 포인트로 바꿉니다. 선택한 색은
+            제품의 상단 구조에 반영됩니다.
+          </p>
+          <div class="cap-options" aria-label="Cap color options">
+            <button class="is-selected" type="button" data-color="#11100e" data-name="Black">Black</button>
+            <button type="button" data-color="#8c8477" data-name="Warm Gray">Warm Gray</button>
+            <button type="button" data-color="#bd5b16" data-name="Orange">Orange</button>
+            <button type="button" data-color="#5f6047" data-name="Olive">Olive</button>
+            <button type="button" data-color="#6c7e8f" data-name="Dusty Blue">Dusty Blue</button>
+          </div>
+        </div>
+        <div class="custom-bottle" aria-label="DATUM custom cap preview">
+          <div class="cap-preview" id="capPreview"></div>
+          <div class="neck-preview"></div>
+          <div class="glass-preview">
+            <span></span><span></span><span></span><span></span><span></span>
+            <p id="capName">Black</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail section-reveal">
+        <div class="detail-image">
+          <img src="assets/layer-cards.jpg" alt="L05 DEPTH fragrance layer card with top, middle, and base notes" />
+        </div>
+        <div class="detail-content">
+          <div class="section-label">
+            <span>05</span>
+            <p>Product Detail</p>
+          </div>
+          <p class="product-code">L05 / DEPTH</p>
+          <h2>Depth built from air, frame, and shadow.</h2>
+          <div class="note-table">
+            <div>
+              <span>TOP</span>
+              <p>Air, Bergamot, White Tea, Neroli</p>
+            </div>
+            <div>
+              <span>MIDDLE</span>
+              <p>Frame, Cardamom, Iris, Cedarwood</p>
+            </div>
+            <div>
+              <span>BASE</span>
+              <p>Shadow, Incense, Vetiver, Amber</p>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <div>
+              <span>Space Keywords</span>
+              <p>Low light, vertical section, warm stone, quiet depth</p>
+            </div>
+            <div>
+              <span>Recommended Space</span>
+              <p>Study, gallery room, evening living space</p>
+            </div>
+          </div>
+          <button class="button primary add-featured" type="button">Add L05 / DEPTH to Bag</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contact">
+      <div>
+        <img src="assets/logo-symbol.jpg" alt="" />
+        <p>DATUM</p>
+      </div>
+      <p>SCENT AS LAYERS OF SPACE</p>
+      <nav>
+        <a href="#brand">Brand</a>
+        <a href="#scents">Scents</a>
+        <a href="#builder">Layer Builder</a>
+        <a href="mailto:contact@datum-fragrance.com">Contact</a>
+      </nav>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
