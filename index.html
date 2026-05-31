@@ -1,246 +1,1497 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="DATUM is an architectural fragrance brand: scent as layers of space."
-    />
-    <title>DATUM | Scent as Layers of Space</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clap Trap</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1020;
+        --panel: rgba(15, 22, 42, 0.72);
+        --panel-strong: rgba(12, 18, 34, 0.88);
+        --line: rgba(171, 199, 255, 0.18);
+        --text: #f6f8ff;
+        --muted: #aeb9d3;
+        --accent: #7ee7c5;
+        --accent-2: #ffd166;
+        --danger: #ff5f7a;
+        --mosquito: #e9f7ff;
+        --shadow: rgba(0, 0, 0, 0.36);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 22% 16%, rgba(66, 91, 138, 0.38), transparent 28%),
+          linear-gradient(180deg, #090d1a 0%, #0b1020 46%, #121019 100%);
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      .app {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        min-height: 500px;
+        isolation: isolate;
+        overflow: hidden;
+        background:
+          linear-gradient(rgba(130, 153, 206, 0.04) 1px, transparent 1px) 0 0 / 100% 68px,
+          linear-gradient(90deg, rgba(130, 153, 206, 0.035) 1px, transparent 1px) 0 0 / 74px
+            100%;
+      }
+
+      .room-glow {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+          radial-gradient(circle at 74% 28%, rgba(255, 209, 102, 0.12), transparent 15%),
+          radial-gradient(circle at 50% 108%, rgba(126, 231, 197, 0.1), transparent 32%),
+          linear-gradient(180deg, transparent 56%, rgba(3, 5, 12, 0.44));
+      }
+
+      .window {
+        position: absolute;
+        top: clamp(22px, 4vw, 52px);
+        right: clamp(18px, 6vw, 86px);
+        width: clamp(118px, 18vw, 210px);
+        aspect-ratio: 1.18;
+        border: 1px solid rgba(188, 207, 255, 0.16);
+        border-radius: 8px;
+        background:
+          linear-gradient(90deg, transparent calc(50% - 1px), rgba(188, 207, 255, 0.14) 50%, transparent calc(50% + 1px)),
+          linear-gradient(transparent calc(52% - 1px), rgba(188, 207, 255, 0.14) 52%, transparent calc(52% + 1px)),
+          linear-gradient(180deg, rgba(23, 36, 72, 0.78), rgba(9, 14, 31, 0.72));
+        box-shadow:
+          0 24px 70px rgba(0, 0, 0, 0.3),
+          inset 0 0 34px rgba(144, 178, 255, 0.08);
+        opacity: 0.72;
+        z-index: 0;
+      }
+
+      .window::before {
+        content: "";
+        position: absolute;
+        top: 15%;
+        right: 17%;
+        width: 22%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: #ffe9a6;
+        box-shadow: 0 0 22px rgba(255, 233, 166, 0.34);
+      }
+
+      .window::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 22% 26%, rgba(255, 255, 255, 0.8) 0 1px, transparent 2px),
+          radial-gradient(circle at 34% 70%, rgba(255, 255, 255, 0.54) 0 1px, transparent 2px),
+          radial-gradient(circle at 72% 64%, rgba(255, 255, 255, 0.6) 0 1px, transparent 2px);
+      }
+
+      .hud {
+        position: absolute;
+        top: max(14px, env(safe-area-inset-top));
+        left: max(14px, env(safe-area-inset-left));
+        right: max(14px, env(safe-area-inset-right));
+        z-index: 5;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: start;
+        pointer-events: none;
+      }
+
+      .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .stat {
+        min-width: 86px;
+        padding: 9px 11px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+        backdrop-filter: blur(16px);
+      }
+
+      .stat span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.68rem;
+        line-height: 1;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .stat strong {
+        display: block;
+        margin-top: 5px;
+        font-size: clamp(1rem, 2vw, 1.45rem);
+        line-height: 1;
+        white-space: nowrap;
+      }
+
+      .stat strong span {
+        display: inline;
+        color: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: end;
+        gap: 8px;
+        pointer-events: auto;
+      }
+
+      .icon-button,
+      .primary-button,
+      .secondary-button {
+        min-height: 42px;
+        border-radius: 8px;
+        transition:
+          transform 150ms ease,
+          background 150ms ease,
+          border-color 150ms ease,
+          box-shadow 150ms ease;
+      }
+
+      .icon-button {
+        width: 42px;
+        display: inline-grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+        backdrop-filter: blur(16px);
+      }
+
+      .icon-button:hover,
+      .primary-button:hover,
+      .secondary-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .icon-button:focus-visible,
+      .primary-button:focus-visible,
+      .secondary-button:focus-visible {
+        outline: 3px solid rgba(126, 231, 197, 0.34);
+        outline-offset: 3px;
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .arena {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        overflow: hidden;
+        touch-action: manipulation;
+      }
+
+      .crosshair {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 64px;
+        height: 64px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 3;
+        opacity: 0.52;
+        transition: opacity 160ms ease;
+      }
+
+      .crosshair::before,
+      .crosshair::after {
+        content: "";
+        position: absolute;
+        inset: 28px;
+        background: rgba(126, 231, 197, 0.72);
+        box-shadow: 0 0 18px rgba(126, 231, 197, 0.26);
+      }
+
+      .crosshair::before {
+        height: 1px;
+        left: 10px;
+        right: 10px;
+      }
+
+      .crosshair::after {
+        width: 1px;
+        top: 10px;
+        bottom: 10px;
+      }
+
+      .crosshair-ring {
+        position: absolute;
+        inset: 16px;
+        border: 1px solid rgba(126, 231, 197, 0.38);
+        border-radius: 50%;
+      }
+
+      .arena.is-playing:hover .crosshair {
+        opacity: 0.9;
+      }
+
+      .mosquito {
+        position: absolute;
+        width: var(--size, 48px);
+        height: var(--size, 48px);
+        transform: translate3d(var(--x, 0), var(--y, 0), 0) rotate(var(--angle, 0deg));
+        transform-origin: 50% 50%;
+        z-index: 2;
+        filter: drop-shadow(0 8px 7px rgba(0, 0, 0, 0.32));
+        will-change: transform;
+      }
+
+      .mosquito svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .mosquito-face {
+        position: absolute;
+        left: 4%;
+        top: -22%;
+        width: 92%;
+        aspect-ratio: 1;
+        border: 2px solid rgba(246, 248, 255, 0.9);
+        border-radius: 50%;
+        background: rgba(246, 248, 255, 0.18);
+        box-shadow:
+          0 0 0 2px rgba(11, 16, 32, 0.55),
+          0 7px 16px rgba(0, 0, 0, 0.42);
+        object-fit: cover;
+        object-position: 50% 50%;
+        opacity: 0;
+        pointer-events: none;
+        transform: rotate(0deg);
+        transition: opacity 160ms ease;
+      }
+
+      .has-custom-face .mosquito-face {
+        opacity: 1;
+      }
+
+      .mosquito .wing-left,
+      .mosquito .wing-right {
+        transform-box: fill-box;
+        transform-origin: 70% 60%;
+        animation: wingBeat var(--wing-speed, 82ms) ease-in-out infinite alternate;
+      }
+
+      .mosquito .wing-right {
+        transform-origin: 30% 60%;
+        animation-delay: calc(var(--wing-speed, 82ms) * -0.45);
+      }
+
+      .mosquito .leg {
+        animation: legFlick 360ms ease-in-out infinite alternate;
+      }
+
+      .mosquito:nth-child(2n) .leg {
+        animation-delay: -180ms;
+      }
+
+      @keyframes wingBeat {
+        from {
+          transform: scaleX(0.58) rotate(-9deg);
+          opacity: 0.38;
+        }
+
+        to {
+          transform: scaleX(1.12) rotate(8deg);
+          opacity: 0.76;
+        }
+      }
+
+      @keyframes legFlick {
+        from {
+          transform: translateY(-0.5px);
+        }
+
+        to {
+          transform: translateY(1.2px);
+        }
+      }
+
+      .shockwave {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: calc(var(--radius) * 2);
+        height: calc(var(--radius) * 2);
+        transform: translate(-50%, -50%) scale(0.12);
+        border-radius: 50%;
+        z-index: 4;
+        pointer-events: none;
+        border: 2px solid rgba(126, 231, 197, 0.78);
+        background: radial-gradient(circle, rgba(126, 231, 197, 0.26) 0 10%, transparent 58%);
+        box-shadow:
+          0 0 30px rgba(126, 231, 197, 0.28),
+          inset 0 0 24px rgba(255, 255, 255, 0.1);
+        animation: shock 430ms cubic-bezier(0.16, 0.9, 0.32, 1) forwards;
+      }
+
+      @keyframes shock {
+        55% {
+          opacity: 1;
+        }
+
+        to {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0;
+        }
+      }
+
+      .hands {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: min(30vw, 210px);
+        height: min(18vw, 126px);
+        min-width: 132px;
+        min-height: 80px;
+        transform: translate(-50%, -50%);
+        z-index: 4;
+        pointer-events: none;
+        animation: handFade 360ms ease-out forwards;
+      }
+
+      .hand {
+        position: absolute;
+        top: 50%;
+        width: 44%;
+        height: 58%;
+        border: 1px solid rgba(255, 235, 186, 0.56);
+        border-radius: 38% 34% 44% 38%;
+        background:
+          radial-gradient(circle at 68% 42%, rgba(255, 255, 255, 0.28), transparent 22%),
+          linear-gradient(145deg, #ffd794, #d6975e);
+        box-shadow:
+          0 12px 22px rgba(0, 0, 0, 0.24),
+          inset 0 -9px 14px rgba(120, 64, 32, 0.18);
+      }
+
+      .hand::before,
+      .hand::after {
+        content: "";
+        position: absolute;
+        top: -13%;
+        width: 20%;
+        height: 42%;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 235, 186, 0.5);
+        background: linear-gradient(180deg, #ffe1a8, #d99d62);
+      }
+
+      .hand::before {
+        left: 18%;
+      }
+
+      .hand::after {
+        left: 42%;
+      }
+
+      .hand-left {
+        left: 0;
+        transform: translate(-30%, -50%) rotate(24deg);
+        animation: clapLeft 290ms cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+      }
+
+      .hand-right {
+        right: 0;
+        transform: translate(30%, -50%) rotate(-24deg) scaleX(-1);
+        animation: clapRight 290ms cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+      }
+
+      @keyframes clapLeft {
+        42%,
+        68% {
+          transform: translate(20%, -50%) rotate(5deg);
+        }
+
+        to {
+          transform: translate(-36%, -50%) rotate(26deg);
+        }
+      }
+
+      @keyframes clapRight {
+        42%,
+        68% {
+          transform: translate(-20%, -50%) rotate(-5deg) scaleX(-1);
+        }
+
+        to {
+          transform: translate(36%, -50%) rotate(-26deg) scaleX(-1);
+        }
+      }
+
+      @keyframes handFade {
+        0% {
+          opacity: 0;
+        }
+
+        20%,
+        72% {
+          opacity: 1;
+        }
+
+        to {
+          opacity: 0;
+        }
+      }
+
+      .splat {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: var(--size);
+        height: var(--size);
+        transform: translate(-50%, -50%) scale(0.24) rotate(var(--rot, 0deg));
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0.9;
+        animation: splat 740ms ease-out forwards;
+      }
+
+      .splat::before,
+      .splat::after {
+        content: "";
+        position: absolute;
+        inset: 22%;
+        border-radius: 48% 52% 46% 54%;
+        background: var(--danger);
+        box-shadow:
+          -18px -8px 0 -7px var(--danger),
+          20px -10px 0 -8px var(--danger),
+          -17px 15px 0 -9px var(--danger),
+          17px 14px 0 -8px var(--danger),
+          0 0 18px rgba(255, 95, 122, 0.26);
+      }
+
+      .splat::after {
+        inset: 36%;
+        background: rgba(18, 16, 25, 0.5);
+        box-shadow: none;
+      }
+
+      @keyframes splat {
+        18% {
+          transform: translate(-50%, -50%) scale(1.1) rotate(var(--rot, 0deg));
+          opacity: 1;
+        }
+
+        to {
+          transform: translate(-50%, -50%) scale(1.22) rotate(var(--rot, 0deg));
+          opacity: 0;
+        }
+      }
+
+      .float-text {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        transform: translate(-50%, -50%);
+        z-index: 6;
+        pointer-events: none;
+        color: var(--accent-2);
+        font-weight: 900;
+        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.55);
+        animation: floatScore 900ms ease-out forwards;
+      }
+
+      @keyframes floatScore {
+        to {
+          transform: translate(-50%, -130%);
+          opacity: 0;
+        }
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 8;
+        display: grid;
+        place-items: center;
+        padding: 22px;
+        background:
+          radial-gradient(circle at 50% 42%, rgba(126, 231, 197, 0.11), transparent 28%),
+          rgba(4, 7, 15, 0.56);
+        backdrop-filter: blur(14px);
+      }
+
+      .overlay[hidden] {
+        display: none;
+      }
+
+      .intro {
+        width: min(540px, 100%);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: clamp(22px, 5vw, 38px);
+        background: var(--panel-strong);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 30px;
+        padding: 6px 10px;
+        border: 1px solid rgba(126, 231, 197, 0.24);
+        border-radius: 999px;
+        color: var(--accent);
+        background: rgba(126, 231, 197, 0.08);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 16px 0 10px;
+        font-size: clamp(2.25rem, 8vw, 4.8rem);
+        line-height: 0.92;
+        letter-spacing: 0;
+      }
+
+      .intro p {
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(1rem, 2.3vw, 1.12rem);
+        line-height: 1.55;
+      }
+
+      .intro-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .primary-button,
+      .secondary-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-width: min(100%, 190px);
+        padding: 0 16px;
+        font-weight: 850;
+        cursor: pointer;
+      }
+
+      .primary-button {
+        background: linear-gradient(180deg, #8ff2d4, #4ac6a5);
+        color: #07130f;
+        box-shadow: 0 16px 36px rgba(74, 198, 165, 0.22);
+      }
+
+      .secondary-button {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .microcopy {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 6px 9px;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 8px;
+        color: #cad4ef;
+        background: rgba(255, 255, 255, 0.045);
+        font-size: 0.82rem;
+      }
+
+      .status-line {
+        min-height: 20px;
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .game-over {
+        text-align: left;
+      }
+
+      .game-over h2 {
+        margin: 0 0 8px;
+        font-size: clamp(2rem, 7vw, 4rem);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .result-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin: 20px 0 22px;
+      }
+
+      .result {
+        min-height: 78px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.045);
+      }
+
+      .result span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .result strong {
+        display: block;
+        margin-top: 8px;
+        font-size: clamp(1.25rem, 3vw, 1.8rem);
+        line-height: 1;
+      }
+
+      .toast {
+        position: absolute;
+        left: 50%;
+        bottom: max(18px, env(safe-area-inset-bottom));
+        z-index: 7;
+        max-width: calc(100vw - 28px);
+        padding: 10px 13px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        color: #e7edff;
+        background: rgba(8, 12, 24, 0.76);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+        transform: translate(-50%, 12px);
+        opacity: 0;
+        pointer-events: none;
+        backdrop-filter: blur(14px);
+        transition:
+          opacity 180ms ease,
+          transform 180ms ease;
+      }
+
+      .toast.is-visible {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      .sound-off .sound-on-icon,
+      .sound-on .sound-off-icon {
+        display: none;
+      }
+
+      @media (max-width: 720px) {
+        .app {
+          min-height: 560px;
+        }
+
+        .hud {
+          grid-template-columns: 1fr;
+        }
+
+        .controls {
+          justify-content: start;
+        }
+
+        .stat {
+          min-width: calc(50% - 4px);
+          flex: 1 1 calc(50% - 4px);
+        }
+
+        .result-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .intro-actions {
+          display: grid;
+        }
+
+        .primary-button,
+        .secondary-button {
+          width: 100%;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
   </head>
   <body>
-    <header class="site-header" aria-label="Primary navigation">
-      <a class="brand-mark" href="#top" aria-label="DATUM home">
-        <img src="assets/logo-symbol.jpg" alt="" />
-        <span>DATUM</span>
-      </a>
-      <nav class="site-nav">
-        <a href="#brand">Brand</a>
-        <a href="#scents">Scents</a>
-        <a href="#builder">Layer Builder</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <button class="cart-button" type="button" aria-live="polite">
-        Bag <span id="cartCount">0</span>
-      </button>
-    </header>
+    <main class="app sound-on has-custom-face" id="app">
+      <div class="room-glow" aria-hidden="true"></div>
+      <div class="window" aria-hidden="true"></div>
 
-    <main id="top">
-      <section class="hero section-reveal">
-        <div class="hero-grid" aria-hidden="true"></div>
-        <div class="hero-copy">
-          <img class="hero-wordmark" src="assets/datum-wordmark.png" alt="DATUM" />
-          <p class="eyebrow">SCENT AS LAYERS OF SPACE</p>
-          <h1>Architectural fragrance for spatial perception.</h1>
-          <p class="hero-text">
-            향을 통해 공간의 구조를 읽고, 레이어로 재구성하는 프래그런스 브랜드.
-            DATUM은 개인의 공간 감각을 향의 구조로 완성합니다.
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#scents">Explore Scents</a>
-            <a class="button secondary" href="#builder">Build Your Layer</a>
+      <section class="hud" aria-label="Game status">
+        <div class="stats">
+          <div class="stat">
+            <span>Score</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="stat">
+            <span>Time</span>
+            <strong><span id="time">45</span>s</strong>
+          </div>
+          <div class="stat">
+            <span>Combo</span>
+            <strong id="combo">x1</strong>
+          </div>
+          <div class="stat">
+            <span>Best</span>
+            <strong id="best">0</strong>
           </div>
         </div>
-        <div class="hero-visual">
-          <div class="spatial-frame">
-            <div class="section-planes" aria-hidden="true">
-              <span></span><span></span><span></span><span></span>
-            </div>
-            <!-- This uses the attached image as an editorial frame. If a clean product cut-out is produced later, replace this source and adjust object-fit to contain. -->
-            <img class="hero-bottle" src="assets/perfume-bottles.jpg" alt="DATUM rectangular ribbed perfume bottles" />
-          </div>
-        </div>
-        <div class="hero-caption">
-          <span>L05 / DEPTH</span>
-          <span>100ML</span>
-          <span>3.4 FL. OZ</span>
+        <div class="controls">
+          <button class="icon-button" type="button" id="soundToggle" aria-label="Sound on" title="Sound on">
+            <svg class="icon sound-on-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 5 6 9H3v6h3l5 4z"></path>
+              <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+              <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+            </svg>
+            <svg class="icon sound-off-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 5 6 9H3v6h3l5 4z"></path>
+              <path d="m17 9 4 4"></path>
+              <path d="m21 9-4 4"></path>
+            </svg>
+          </button>
+          <button class="icon-button" type="button" id="restartBtn" aria-label="Restart" title="Restart">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+              <path d="M3 4v6h6"></path>
+            </svg>
+          </button>
         </div>
       </section>
 
-      <section class="concept section-reveal" id="brand">
-        <div class="section-label">
-          <span>01</span>
-          <p>Brand Concept</p>
+      <section class="arena" id="arena" aria-label="Mosquito catching arena">
+        <div class="crosshair" id="crosshair" aria-hidden="true">
+          <div class="crosshair-ring"></div>
         </div>
-        <div class="concept-copy">
-          <h2>향은 보이지 않는 공간의 단면입니다.</h2>
+      </section>
+
+      <section class="overlay" id="startOverlay" aria-labelledby="title">
+        <div class="intro">
+          <div class="kicker">Night shift pest control</div>
+          <h1 id="title">Clap Trap</h1>
           <p>
-            DATUM은 향을 단일한 감각으로 소비하지 않습니다. 공기, 빛, 구조, 그림자의
-            층위를 읽고 조합하여 사용자가 스스로 공간을 해석하는 방식을 제안합니다.
+            Move the target, clap near the mic, or tap the screen. Catch as many mosquitoes as you can before the room gets quiet again.
           </p>
-        </div>
-        <div class="layer-diagram" aria-label="Scent layer structure">
-          <div class="diagram-plane plane-a">
-            <span>TOP</span>
+          <div class="intro-actions">
+            <button class="primary-button" type="button" id="micStartBtn">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <path d="M12 19v3"></path>
+              </svg>
+              Enable mic
+            </button>
+            <button class="secondary-button" type="button" id="fallbackStartBtn">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+              </svg>
+              Test mode
+            </button>
+            <label class="secondary-button" for="faceUpload">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                <circle cx="8.5" cy="10" r="1.5"></circle>
+                <path d="m21 15-5-5L5 19"></path>
+              </svg>
+              Face photo
+            </label>
+            <input class="file-input" type="file" id="faceUpload" accept="image/*" />
           </div>
-          <div class="diagram-plane plane-b">
-            <span>MIDDLE</span>
+          <div class="microcopy" aria-label="Controls">
+            <span class="chip">Mic clap</span>
+            <span class="chip">Spacebar</span>
+            <span class="chip">Click or tap</span>
+            <span class="chip" id="faceStatus">Photo face ready</span>
           </div>
-          <div class="diagram-plane plane-c">
-            <span>BASE</span>
-          </div>
-          <div class="diagram-lines"></div>
-        </div>
-      </section>
-
-      <section class="visual-band section-reveal">
-        <div class="experience-editorial">
-          <figure class="experience-large">
-            <img src="assets/packaging.png" alt="DATUM packaging and perfume in a warm gray architectural setting" />
-          </figure>
-          <figure class="experience-small">
-            <img src="assets/layer-cards.jpg" alt="DATUM layered fragrance cards" />
-          </figure>
-        </div>
-        <div class="visual-note">
-          <span>Brand Experience</span>
-          <p>Spatial rhythm, frosted cards, blind emboss, structured shadow.</p>
-        </div>
-      </section>
-
-      <section class="products section-reveal" id="scents">
-        <div class="section-heading">
-          <div class="section-label">
-            <span>02</span>
-            <p>Scents</p>
-          </div>
-          <h2>Fragrances placed as objects in space.</h2>
-        </div>
-        <div class="product-grid" id="productGrid"></div>
-      </section>
-
-      <section class="builder section-reveal" id="builder">
-        <div class="section-label">
-          <span>03</span>
-          <p>Scent Layer Builder</p>
-        </div>
-        <div class="builder-panel">
-          <div class="builder-copy">
-            <h2>Build a spatial scent layer.</h2>
-            <p>
-              TOP, MIDDLE, BASE의 구조를 선택해 공간의 첫 인상, 중심 구조, 잔향의
-              깊이를 조합합니다.
-            </p>
-          </div>
-          <div class="layer-controls" aria-label="Scent layer options">
-            <div class="layer-group" data-layer="top">
-              <h3>TOP</h3>
-              <button type="button" data-value="Air 01">Air 01</button>
-              <button type="button" data-value="Light 02">Light 02</button>
-              <button type="button" data-value="Citrus Veil">Citrus Veil</button>
-            </div>
-            <div class="layer-group" data-layer="middle">
-              <h3>MIDDLE</h3>
-              <button type="button" data-value="Frame 06">Frame 06</button>
-              <button type="button" data-value="Grid 08">Grid 08</button>
-              <button type="button" data-value="Iris Plane">Iris Plane</button>
-            </div>
-            <div class="layer-group" data-layer="base">
-              <h3>BASE</h3>
-              <button type="button" data-value="Shadow 11">Shadow 11</button>
-              <button type="button" data-value="Depth 05">Depth 05</button>
-              <button type="button" data-value="Amber Stone">Amber Stone</button>
-            </div>
-          </div>
-          <aside class="layer-summary">
-            <p class="eyebrow">Your Spatial Scent Layer</p>
-            <dl>
-              <div><dt>TOP</dt><dd id="summaryTop">Air 01</dd></div>
-              <div><dt>MIDDLE</dt><dd id="summaryMiddle">Frame 06</dd></div>
-              <div><dt>BASE</dt><dd id="summaryBase">Shadow 11</dd></div>
-            </dl>
-            <div class="summary-lines" aria-hidden="true">
-              <span></span><span></span><span></span>
-            </div>
-          </aside>
+          <div class="status-line" id="micStatus" role="status" aria-live="polite"></div>
         </div>
       </section>
 
-      <section class="cap-section section-reveal">
-        <div class="cap-copy">
-          <div class="section-label">
-            <span>04</span>
-            <p>Custom Cap</p>
+      <section class="overlay" id="gameOverOverlay" aria-labelledby="gameOverTitle" hidden>
+        <div class="intro game-over">
+          <div class="kicker">Lights out</div>
+          <h2 id="gameOverTitle">Round over</h2>
+          <p id="resultCopy">The room is calmer now.</p>
+          <div class="result-grid">
+            <div class="result">
+              <span>Score</span>
+              <strong id="finalScore">0</strong>
+            </div>
+            <div class="result">
+              <span>Best combo</span>
+              <strong id="finalCombo">x1</strong>
+            </div>
+            <div class="result">
+              <span>Best</span>
+              <strong id="finalBest">0</strong>
+            </div>
           </div>
-          <h2>Choose the cap as a spatial accent.</h2>
-          <p>
-            병의 구조는 유지하고, 캡의 색상만 절제된 포인트로 바꿉니다. 선택한 색은
-            제품의 상단 구조에 반영됩니다.
-          </p>
-          <div class="cap-options" aria-label="Cap color options">
-            <button class="is-selected" type="button" data-color="#11100e" data-name="Black">Black</button>
-            <button type="button" data-color="#8c8477" data-name="Warm Gray">Warm Gray</button>
-            <button type="button" data-color="#bd5b16" data-name="Orange">Orange</button>
-            <button type="button" data-color="#5f6047" data-name="Olive">Olive</button>
-            <button type="button" data-color="#6c7e8f" data-name="Dusty Blue">Dusty Blue</button>
-          </div>
-        </div>
-        <div class="custom-bottle" aria-label="DATUM custom cap preview">
-          <div class="cap-preview" id="capPreview"></div>
-          <div class="neck-preview"></div>
-          <div class="glass-preview">
-            <span></span><span></span><span></span><span></span><span></span>
-            <p id="capName">Black</p>
+          <div class="intro-actions">
+            <button class="primary-button" type="button" id="playAgainBtn">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                <path d="M3 4v6h6"></path>
+              </svg>
+              Play again
+            </button>
           </div>
         </div>
       </section>
 
-      <section class="detail section-reveal">
-        <div class="detail-image">
-          <img src="assets/layer-cards.jpg" alt="L05 DEPTH fragrance layer card with top, middle, and base notes" />
-        </div>
-        <div class="detail-content">
-          <div class="section-label">
-            <span>05</span>
-            <p>Product Detail</p>
-          </div>
-          <p class="product-code">L05 / DEPTH</p>
-          <h2>Depth built from air, frame, and shadow.</h2>
-          <div class="note-table">
-            <div>
-              <span>TOP</span>
-              <p>Air, Bergamot, White Tea, Neroli</p>
-            </div>
-            <div>
-              <span>MIDDLE</span>
-              <p>Frame, Cardamom, Iris, Cedarwood</p>
-            </div>
-            <div>
-              <span>BASE</span>
-              <p>Shadow, Incense, Vetiver, Amber</p>
-            </div>
-          </div>
-          <div class="detail-meta">
-            <div>
-              <span>Space Keywords</span>
-              <p>Low light, vertical section, warm stone, quiet depth</p>
-            </div>
-            <div>
-              <span>Recommended Space</span>
-              <p>Study, gallery room, evening living space</p>
-            </div>
-          </div>
-          <button class="button primary add-featured" type="button">Add L05 / DEPTH to Bag</button>
-        </div>
-      </section>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
     </main>
 
-    <footer class="site-footer" id="contact">
-      <div>
-        <img src="assets/logo-symbol.jpg" alt="" />
-        <p>DATUM</p>
-      </div>
-      <p>SCENT AS LAYERS OF SPACE</p>
-      <nav>
-        <a href="#brand">Brand</a>
-        <a href="#scents">Scents</a>
-        <a href="#builder">Layer Builder</a>
-        <a href="mailto:contact@datum-fragrance.com">Contact</a>
-      </nav>
-    </footer>
+    <script>
+      (() => {
+        const GAME_SECONDS = 45;
+        const MOSQUITO_COUNT = 12;
+        const CLAP_RADIUS = 132;
+        const BEST_SCORE_KEY = "clapTrapBestScoreFace9404";
+        const DEFAULT_FACE_URL = "assets/mosquito-face-9404.jpg";
+        const CLAP_COOLDOWN_MS = 430;
+        const MIC_COOLDOWN_MS = 620;
+        const RESPAWN_DELAY_MS = 850;
+        const SPIKE_THRESHOLD = 0.22;
+        const SPIKE_RATIO = 2.15;
 
-    <script src="script.js"></script>
+        const app = document.querySelector("#app");
+        const arena = document.querySelector("#arena");
+        const crosshair = document.querySelector("#crosshair");
+        const startOverlay = document.querySelector("#startOverlay");
+        const gameOverOverlay = document.querySelector("#gameOverOverlay");
+        const micStartBtn = document.querySelector("#micStartBtn");
+        const fallbackStartBtn = document.querySelector("#fallbackStartBtn");
+        const faceUpload = document.querySelector("#faceUpload");
+        const faceStatus = document.querySelector("#faceStatus");
+        const restartBtn = document.querySelector("#restartBtn");
+        const playAgainBtn = document.querySelector("#playAgainBtn");
+        const soundToggle = document.querySelector("#soundToggle");
+        const scoreEl = document.querySelector("#score");
+        const timeEl = document.querySelector("#time");
+        const comboEl = document.querySelector("#combo");
+        const bestEl = document.querySelector("#best");
+        const finalScoreEl = document.querySelector("#finalScore");
+        const finalComboEl = document.querySelector("#finalCombo");
+        const finalBestEl = document.querySelector("#finalBest");
+        const resultCopy = document.querySelector("#resultCopy");
+        const micStatus = document.querySelector("#micStatus");
+        const toast = document.querySelector("#toast");
+
+        const state = {
+          running: false,
+          score: 0,
+          combo: 1,
+          bestCombo: 1,
+          secondsLeft: GAME_SECONDS,
+          lastFrame: 0,
+          lastClap: 0,
+          lastMicClap: 0,
+          target: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+          mosquitoes: [],
+          animationId: 0,
+          timerId: 0,
+          soundOn: true,
+          audioCtx: null,
+          micCtx: null,
+          analyser: null,
+          micStream: null,
+          micLoopId: 0,
+          rollingLevel: 0.02,
+          toastTimer: 0,
+          faceUrl: DEFAULT_FACE_URL,
+        };
+
+        const mosquitoSvg = `
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <ellipse class="wing-left" cx="25" cy="25" rx="18" ry="8" fill="rgba(176,231,255,0.44)" stroke="rgba(231,250,255,0.62)" />
+            <ellipse class="wing-right" cx="39" cy="25" rx="18" ry="8" fill="rgba(176,231,255,0.44)" stroke="rgba(231,250,255,0.62)" />
+            <path d="M12 18 2 10M13 24 2 22M14 30 3 37M50 18l10-8M50 24l11-2M49 30l12 8" stroke="rgba(220,238,246,0.88)" stroke-width="2" stroke-linecap="round" class="leg" />
+            <ellipse cx="32" cy="29" rx="8" ry="15" fill="#ddefff" />
+            <path d="M32 41c8 3 13 7 16 12" stroke="#ddefff" stroke-width="3" stroke-linecap="round" />
+            <circle cx="32" cy="13" r="6" fill="#f4fbff" />
+            <path d="M32 9 27 2M33 9l5-7" stroke="#f4fbff" stroke-width="2" stroke-linecap="round" />
+            <circle cx="29.5" cy="12" r="1.4" fill="#0b1020" />
+            <circle cx="34.5" cy="12" r="1.4" fill="#0b1020" />
+          </svg>
+        `;
+
+        function random(min, max) {
+          return Math.random() * (max - min) + min;
+        }
+
+        function clamp(value, min, max) {
+          return Math.max(min, Math.min(max, value));
+        }
+
+        function formatScore(value) {
+          return String(value).padStart(2, "0");
+        }
+
+        function getBest() {
+          return Number(localStorage.getItem(BEST_SCORE_KEY) || 0);
+        }
+
+        function setBest(value) {
+          localStorage.setItem(BEST_SCORE_KEY, String(value));
+          bestEl.textContent = formatScore(value);
+        }
+
+        function syncHud() {
+          scoreEl.textContent = formatScore(state.score);
+          timeEl.textContent = state.secondsLeft;
+          comboEl.textContent = `x${state.combo}`;
+          bestEl.textContent = formatScore(getBest());
+        }
+
+        function updateTarget(x, y) {
+          const rect = arena.getBoundingClientRect();
+          state.target.x = clamp(x, 0, rect.width);
+          state.target.y = clamp(y, 0, rect.height);
+          crosshair.style.left = `${state.target.x}px`;
+          crosshair.style.top = `${state.target.y}px`;
+        }
+
+        function showToast(message) {
+          clearTimeout(state.toastTimer);
+          toast.textContent = message;
+          toast.classList.add("is-visible");
+          state.toastTimer = setTimeout(() => {
+            toast.classList.remove("is-visible");
+          }, 1700);
+        }
+
+        function applyFaceToMosquito(el) {
+          const face = el.querySelector(".mosquito-face");
+          if (!face) return;
+          if (state.faceUrl) {
+            face.src = state.faceUrl;
+          } else {
+            face.removeAttribute("src");
+          }
+        }
+
+        function applyFaceToAllMosquitoes() {
+          app.classList.toggle("has-custom-face", Boolean(state.faceUrl));
+          state.mosquitoes.forEach((bug) => applyFaceToMosquito(bug.el));
+        }
+
+        function makeMosquito(index) {
+          const el = document.createElement("div");
+          el.className = "mosquito";
+          el.innerHTML = `${mosquitoSvg}<img class="mosquito-face" alt="" />`;
+          applyFaceToMosquito(el);
+          arena.appendChild(el);
+
+          const bug = {
+            el,
+            x: random(30, window.innerWidth - 70),
+            y: random(86, window.innerHeight - 70),
+            vx: random(-90, 90),
+            vy: random(-90, 90),
+            size: random(66, 88),
+            angle: random(0, 360),
+            turnIn: random(0.2, 1.4),
+            alive: true,
+            respawnAt: 0,
+            wobble: random(0, Math.PI * 2),
+          };
+
+          el.style.setProperty("--size", `${bug.size}px`);
+          el.style.setProperty("--wing-speed", `${random(58, 96)}ms`);
+          positionMosquito(bug);
+          return bug;
+        }
+
+        function positionMosquito(bug) {
+          bug.el.style.setProperty("--x", `${bug.x}px`);
+          bug.el.style.setProperty("--y", `${bug.y}px`);
+          bug.el.style.setProperty("--angle", `${bug.angle}deg`);
+        }
+
+        function resetMosquito(bug, now = performance.now()) {
+          const rect = arena.getBoundingClientRect();
+          bug.x = random(24, Math.max(30, rect.width - bug.size - 24));
+          bug.y = random(88, Math.max(120, rect.height - bug.size - 24));
+          bug.vx = random(-105, 105);
+          bug.vy = random(-105, 105);
+          bug.angle = random(0, 360);
+          bug.turnIn = random(0.2, 1.2);
+          bug.alive = true;
+          bug.respawnAt = now;
+          bug.el.style.opacity = "1";
+          bug.el.style.pointerEvents = "";
+          positionMosquito(bug);
+        }
+
+        function seedMosquitoes() {
+          state.mosquitoes.forEach((bug) => bug.el.remove());
+          state.mosquitoes = Array.from({ length: MOSQUITO_COUNT }, (_, index) => makeMosquito(index));
+        }
+
+        function moveMosquitoes(time, delta) {
+          const rect = arena.getBoundingClientRect();
+          state.mosquitoes.forEach((bug) => {
+            if (!bug.alive) {
+              if (time >= bug.respawnAt && state.running) {
+                resetMosquito(bug, time);
+              }
+              return;
+            }
+
+            bug.turnIn -= delta;
+            bug.wobble += delta * random(2.4, 4.2);
+            if (bug.turnIn <= 0) {
+              bug.vx += random(-95, 95);
+              bug.vy += random(-95, 95);
+              const speed = Math.hypot(bug.vx, bug.vy) || 1;
+              const targetSpeed = random(82, 168);
+              bug.vx = (bug.vx / speed) * targetSpeed;
+              bug.vy = (bug.vy / speed) * targetSpeed;
+              bug.turnIn = random(0.22, 1.3);
+            }
+
+            bug.x += bug.vx * delta + Math.sin(bug.wobble) * 0.7;
+            bug.y += bug.vy * delta + Math.cos(bug.wobble * 1.3) * 0.55;
+
+            const margin = 10;
+            const maxX = Math.max(margin, rect.width - bug.size - margin);
+            const maxY = Math.max(96, rect.height - bug.size - margin);
+            if (bug.x < margin || bug.x > maxX) {
+              bug.x = clamp(bug.x, margin, maxX);
+              bug.vx *= -0.92;
+            }
+            if (bug.y < 82 || bug.y > maxY) {
+              bug.y = clamp(bug.y, 82, maxY);
+              bug.vy *= -0.92;
+            }
+
+            bug.angle = Math.atan2(bug.vy, bug.vx) * (180 / Math.PI) + 90;
+            positionMosquito(bug);
+          });
+        }
+
+        function animate(time) {
+          if (!state.running) {
+            return;
+          }
+          const delta = state.lastFrame ? Math.min((time - state.lastFrame) / 1000, 0.035) : 0.016;
+          state.lastFrame = time;
+          moveMosquitoes(time, delta);
+          state.animationId = requestAnimationFrame(animate);
+        }
+
+        function createShockwave(x, y) {
+          const wave = document.createElement("div");
+          wave.className = "shockwave";
+          wave.style.setProperty("--x", `${x}px`);
+          wave.style.setProperty("--y", `${y}px`);
+          wave.style.setProperty("--radius", `${CLAP_RADIUS}px`);
+          arena.appendChild(wave);
+          wave.addEventListener("animationend", () => wave.remove(), { once: true });
+
+          const hands = document.createElement("div");
+          hands.className = "hands";
+          hands.style.setProperty("--x", `${x}px`);
+          hands.style.setProperty("--y", `${y}px`);
+          hands.innerHTML = '<div class="hand hand-left"></div><div class="hand hand-right"></div>';
+          arena.appendChild(hands);
+          hands.addEventListener("animationend", () => hands.remove(), { once: true });
+        }
+
+        function createSplat(x, y, size = 62) {
+          const splat = document.createElement("div");
+          splat.className = "splat";
+          splat.style.setProperty("--x", `${x}px`);
+          splat.style.setProperty("--y", `${y}px`);
+          splat.style.setProperty("--size", `${size}px`);
+          splat.style.setProperty("--rot", `${random(-35, 35)}deg`);
+          arena.appendChild(splat);
+          splat.addEventListener("animationend", () => splat.remove(), { once: true });
+        }
+
+        function createFloatText(text, x, y) {
+          const item = document.createElement("div");
+          item.className = "float-text";
+          item.textContent = text;
+          item.style.setProperty("--x", `${x}px`);
+          item.style.setProperty("--y", `${y}px`);
+          arena.appendChild(item);
+          item.addEventListener("animationend", () => item.remove(), { once: true });
+        }
+
+        function ensureAudioContext() {
+          if (!state.audioCtx) {
+            state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          }
+          if (state.audioCtx.state === "suspended") {
+            state.audioCtx.resume();
+          }
+          return state.audioCtx;
+        }
+
+        function playTone(type, frequency, duration, gainValue = 0.05) {
+          if (!state.soundOn) return;
+          const ctx = ensureAudioContext();
+          const now = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(frequency, now);
+          osc.frequency.exponentialRampToValueAtTime(Math.max(80, frequency * 0.48), now + duration);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.exponentialRampToValueAtTime(gainValue, now + 0.012);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration + 0.02);
+        }
+
+        function playClapSound(caught) {
+          playTone("triangle", caught ? 480 : 260, 0.08, caught ? 0.052 : 0.028);
+          if (caught) {
+            setTimeout(() => playTone("sine", 720, 0.075, 0.035), 36);
+          }
+        }
+
+        function catchMosquitoes(x, y) {
+          let caught = 0;
+          state.mosquitoes.forEach((bug) => {
+            if (!bug.alive) return;
+            const centerX = bug.x + bug.size / 2;
+            const centerY = bug.y + bug.size / 2;
+            const distance = Math.hypot(centerX - x, centerY - y);
+            if (distance <= CLAP_RADIUS) {
+              caught += 1;
+              bug.alive = false;
+              bug.respawnAt = performance.now() + RESPAWN_DELAY_MS + random(0, 650);
+              bug.el.style.opacity = "0";
+              bug.el.style.pointerEvents = "none";
+              createSplat(centerX, centerY, bug.size * 1.2);
+            }
+          });
+          return caught;
+        }
+
+        function triggerClap(source = "manual", x = state.target.x, y = state.target.y) {
+          if (!state.running) return;
+          const now = performance.now();
+          const cooldown = source === "mic" ? MIC_COOLDOWN_MS : CLAP_COOLDOWN_MS;
+          const last = source === "mic" ? state.lastMicClap : state.lastClap;
+          if (now - last < cooldown) return;
+
+          if (source === "mic") {
+            state.lastMicClap = now;
+          }
+          state.lastClap = now;
+
+          updateTarget(x, y);
+          createShockwave(state.target.x, state.target.y);
+          const caught = catchMosquitoes(state.target.x, state.target.y);
+          playClapSound(caught);
+
+          if (caught > 0) {
+            const bonus = caught > 1 ? caught - 1 : 0;
+            state.combo = Math.min(9, state.combo + bonus + 1);
+            state.bestCombo = Math.max(state.bestCombo, state.combo);
+            const points = caught * 10 * state.combo;
+            state.score += points;
+            createFloatText(caught > 1 ? `+${points} combo` : `+${points}`, state.target.x, state.target.y - 70);
+          } else {
+            state.combo = 1;
+          }
+          syncHud();
+        }
+
+        function startTimer() {
+          clearInterval(state.timerId);
+          state.timerId = setInterval(() => {
+            if (!state.running) return;
+            state.secondsLeft -= 1;
+            syncHud();
+            if (state.secondsLeft <= 0) {
+              endGame();
+            }
+          }, 1000);
+        }
+
+        function startGame() {
+          gameOverOverlay.hidden = true;
+          startOverlay.hidden = true;
+          arena.classList.add("is-playing");
+          state.running = true;
+          state.score = 0;
+          state.combo = 1;
+          state.bestCombo = 1;
+          state.secondsLeft = GAME_SECONDS;
+          state.lastFrame = 0;
+          state.lastClap = 0;
+          state.lastMicClap = 0;
+          updateTarget(window.innerWidth / 2, window.innerHeight / 2);
+          seedMosquitoes();
+          syncHud();
+          startTimer();
+          cancelAnimationFrame(state.animationId);
+          state.animationId = requestAnimationFrame(animate);
+        }
+
+        function endGame() {
+          state.running = false;
+          arena.classList.remove("is-playing");
+          clearInterval(state.timerId);
+          cancelAnimationFrame(state.animationId);
+
+          const oldBest = getBest();
+          if (state.score > oldBest) {
+            setBest(state.score);
+            resultCopy.textContent = "New best. The room will remember this.";
+          } else {
+            resultCopy.textContent = "The room is calmer now.";
+          }
+
+          finalScoreEl.textContent = formatScore(state.score);
+          finalComboEl.textContent = `x${state.bestCombo}`;
+          finalBestEl.textContent = formatScore(getBest());
+          gameOverOverlay.hidden = false;
+        }
+
+        async function enableMicrophone() {
+          if (!navigator.mediaDevices?.getUserMedia) {
+            micStatus.textContent = "Microphone access is not available here. Test mode still works.";
+            return false;
+          }
+
+          micStatus.textContent = "Waiting for microphone permission...";
+          try {
+            state.micStream = await navigator.mediaDevices.getUserMedia({
+              audio: {
+                echoCancellation: false,
+                noiseSuppression: false,
+                autoGainControl: false,
+              },
+            });
+            state.micCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const source = state.micCtx.createMediaStreamSource(state.micStream);
+            state.analyser = state.micCtx.createAnalyser();
+            state.analyser.fftSize = 1024;
+            state.analyser.smoothingTimeConstant = 0.12;
+            source.connect(state.analyser);
+            monitorMic();
+            micStatus.textContent = "Microphone ready. Clap near your device to catch mosquitoes.";
+            showToast("Mic ready. Spacebar and click still work.");
+            return true;
+          } catch (error) {
+            micStatus.textContent = "Microphone blocked. Starting test mode with click and spacebar.";
+            showToast("Mic blocked. Click or press space to clap.");
+            return false;
+          }
+        }
+
+        function monitorMic() {
+          cancelAnimationFrame(state.micLoopId);
+          const data = new Uint8Array(state.analyser.fftSize);
+
+          const tick = () => {
+            if (!state.analyser) return;
+            state.analyser.getByteTimeDomainData(data);
+            let sum = 0;
+            let peak = 0;
+            for (let index = 0; index < data.length; index += 1) {
+              const centered = (data[index] - 128) / 128;
+              const magnitude = Math.abs(centered);
+              sum += centered * centered;
+              if (magnitude > peak) peak = magnitude;
+            }
+            const rms = Math.sqrt(sum / data.length);
+            state.rollingLevel = state.rollingLevel * 0.94 + rms * 0.06;
+
+            const isSpike = rms > SPIKE_THRESHOLD && rms > state.rollingLevel * SPIKE_RATIO && peak > 0.5;
+            if (isSpike && state.running) {
+              triggerClap("mic");
+              state.rollingLevel = Math.max(state.rollingLevel, rms * 1.4);
+            }
+
+            state.micLoopId = requestAnimationFrame(tick);
+          };
+
+          tick();
+        }
+
+        function restartGame() {
+          startGame();
+          showToast("Fresh round.");
+        }
+
+        micStartBtn.addEventListener("click", async () => {
+          ensureAudioContext();
+          await enableMicrophone();
+          startGame();
+        });
+
+        fallbackStartBtn.addEventListener("click", () => {
+          ensureAudioContext();
+          micStatus.textContent = "Test mode ready. Click, tap, or press spacebar to clap.";
+          startGame();
+        });
+
+        faceUpload.addEventListener("change", () => {
+          const file = faceUpload.files?.[0];
+          if (!file) return;
+          if (!file.type.startsWith("image/")) {
+            showToast("Choose an image file.");
+            faceUpload.value = "";
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.addEventListener("load", () => {
+            state.faceUrl = String(reader.result);
+            faceStatus.textContent = "Photo face ready";
+            applyFaceToAllMosquitoes();
+            showToast("Mosquito faces updated.");
+          });
+          reader.addEventListener("error", () => {
+            showToast("Could not read that photo.");
+          });
+          reader.readAsDataURL(file);
+        });
+
+        restartBtn.addEventListener("click", () => {
+          ensureAudioContext();
+          restartGame();
+        });
+
+        playAgainBtn.addEventListener("click", () => {
+          ensureAudioContext();
+          restartGame();
+        });
+
+        soundToggle.addEventListener("click", () => {
+          state.soundOn = !state.soundOn;
+          app.classList.toggle("sound-on", state.soundOn);
+          app.classList.toggle("sound-off", !state.soundOn);
+          soundToggle.setAttribute("aria-label", state.soundOn ? "Sound on" : "Sound off");
+          soundToggle.title = state.soundOn ? "Sound on" : "Sound off";
+        });
+
+        arena.addEventListener("pointermove", (event) => {
+          if (!state.running) return;
+          updateTarget(event.clientX, event.clientY);
+        });
+
+        arena.addEventListener("pointerdown", (event) => {
+          if (!state.running) return;
+          ensureAudioContext();
+          triggerClap("manual", event.clientX, event.clientY);
+        });
+
+        window.addEventListener("keydown", (event) => {
+          if (event.code !== "Space") return;
+          event.preventDefault();
+          ensureAudioContext();
+          if (state.running) {
+            triggerClap("manual");
+          } else if (!startOverlay.hidden) {
+            startGame();
+          }
+        });
+
+        window.addEventListener("resize", () => {
+          updateTarget(state.target.x, state.target.y);
+          state.mosquitoes.forEach((bug) => {
+            if (bug.alive) resetMosquito(bug);
+          });
+        });
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            state.lastFrame = 0;
+          }
+        });
+
+        syncHud();
+        updateTarget(window.innerWidth / 2, window.innerHeight / 2);
+      })();
+    </script>
   </body>
 </html>
